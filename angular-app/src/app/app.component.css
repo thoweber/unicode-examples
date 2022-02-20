@@ -1,0 +1,29 @@
+.main-content {
+    margin:0 auto;
+    width: 100%;
+    max-width: 1000px;
+}
+.unicode-table td {
+    padding:.25em;
+    text-align: center;
+}
+.unicode-table td.head-column {
+    background-color: #505050;
+    text-align: left;
+}
+.string-buttons {
+    margin: 1em 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+span.list::after {
+    content: ', ';
+}
+span.list:last-child::after {
+    content: '.'
+}
+:host {
+    background-color: #303030;
+}

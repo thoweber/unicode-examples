@@ -1,0 +1,134 @@
+<mat-toolbar color="primary">
+  Unicode Beispiele
+</mat-toolbar>
+
+<div class="main-content">
+  <mat-tab-group mat-align-tabs="start">
+    <mat-tab label="Repräsentation">
+
+      <h1>Unterschiedliche Repräsentationen</h1>
+      <div>Beispiel Text: <code>Amélie</code></div>
+      <table class="unicode-table">
+        <tbody>
+          <tr>
+            <td class="head-column">NFC character</td>
+            <td>A</td>
+            <td>m</td>
+            <td colspan="2">é</td>
+            <td>l</td>
+            <td>i</td>
+            <td>e</td>
+          </tr>
+          <tr>
+            <td class="head-column">NFC code point</td>
+            <td>0041</td>
+            <td>006d</td>
+            <td colspan="2">00e9</td>
+            <td>006c</td>
+            <td>0069</td>
+            <td>0065</td>
+          </tr>
+          <tr>
+            <td class="head-column">NFD code point</td>
+            <td>0041</td>
+            <td>006d</td>
+            <td>0065</td>
+            <td>0301</td>
+            <td>006c</td>
+            <td>0069</td>
+            <td>0065</td>
+          </tr>
+          <tr>
+            <td class="head-column">NFC character</td>
+            <td>A</td>
+            <td>m</td>
+            <td>e</td>
+            <td>◌́</td>
+            <td>l</td>
+            <td>i</td>
+            <td>e</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="string-buttons">
+        <button mat-flat-button color="accent" (click)="exampleMode='equality'">Gleichheit prüfen</button>
+        <button mat-flat-button color="accent" (click)="exampleMode='NFC'">NFC-String</button>
+        <button mat-flat-button color="accent" (click)="exampleMode='NFD'">NFD-String</button>
+      </div>
+
+      <div *ngIf="exampleMode=='NFC'">
+        <h3>NFC-String-Beispiel</h3>
+        <h4>
+          Ausgabe: {{exampleNFC}}
+        </h4>
+        <pre>exampleNFC: string = "\u0041\u006d\u00e9\u006c\u0069\u0065";</pre>
+        <div>
+          <code>exampleNFC.length: {{exampleNFC.length}}</code>
+        </div>
+        <p>
+          <br>
+          Code Points:
+        </p>
+        <pre>for (let i = 0; i &lt; value.length; i++) {{ '{' }}
+      console.log(value.codePointAt(i));
+    {{ '}' }}</pre>
+        <span class="list" *ngFor="let codePoint of getCodePoints(exampleNFC)">{{codePoint.toString(16)}}</span>
+      </div>
+
+      <div *ngIf="exampleMode=='NFD'">
+        <h3>NFD-String-Beispiel</h3>
+        <h4>
+          Ausgabe: {{exampleNFD}}
+        </h4>
+        <pre>exampleNFD: string = "\u0041\u006d\u0065\u0301\u006c\u0069\u0065";</pre>
+        <div>
+          <code>exampleNFD.length: {{exampleNFD.length}}</code>
+        </div>
+        <p>
+          <br>
+          Code Points:
+        </p>
+        <pre>for (let i = 0; i &lt; value.length; i++) {{ '{' }}
+      console.log(value.codePointAt(i));
+    {{ '}' }}</pre>
+        <span class="list" *ngFor="let codePoint of getCodePoints(exampleNFD)">{{codePoint.toString(16)}}</span>
+      </div>
+
+      <div *ngIf="exampleMode=='equality'">
+        <h3>Gleichheit prüfen</h3>
+        <h4>
+          Ausgabe NFC: {{exampleNFC}}<br>
+          Ausgabe NFD: {{exampleNFD}}
+        </h4>
+        <pre>exampleNFC: string = "\u0041\u006d\u00e9\u006c\u0069\u0065";</pre>
+        <pre>exampleNFD: string = "\u0041\u006d\u0065\u0301\u006c\u0069\u0065";</pre>
+        <pre>exampleNFC == exampleNFD => {{ exampleNFC == exampleNFD}}</pre>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Datenübertragung">
+      <h1>Datenübertragung</h1>
+      <div class="string-buttons">
+        <mat-form-field>
+          <mat-label>Beispiel-Eingabe</mat-label>
+          <input matInput type="text" [(ngModel)]="inputValue">
+          <button *ngIf="inputValue" matSuffix mat-icon-button aria-label="Clear" (click)="inputValue=''">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+        <button mat-flat-button color="accent" (click)="inputValue=exampleNFC">befüllen mit NFC-String</button>
+        <button mat-flat-button color="accent" (click)="inputValue=exampleNFD">befüllen mit NFD-String</button>
+      </div>
+      <ng-container *ngIf="inputValue!=''">
+        <div>
+          Code Points:
+          <span class="list" *ngFor="let codePoint of getCodePoints(inputValue)">{{codePoint.toString(16)}}</span>
+        </div>
+        <div>
+          URL Encoded: {{ encodeURIComponent(inputValue) }}
+        </div>
+      </ng-container>
+    </mat-tab>
+    <mat-tab label="Third">Content 3</mat-tab>
+  </mat-tab-group>
+</div>
