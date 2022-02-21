@@ -3,7 +3,7 @@
 </mat-toolbar>
 
 <div class="main-content">
-  <mat-tab-group mat-align-tabs="start">
+  <mat-tab-group mat-align-tabs="start" animationDuration="0ms" (selectedTabChange)="clearInputs()">
     <mat-tab label="Repräsentation">
 
       <h1>Unterschiedliche Repräsentationen</h1>
@@ -57,49 +57,51 @@
       </div>
 
       <div *ngIf="exampleMode=='NFC'">
-        <h3>NFC-String-Beispiel</h3>
-        <h4>
+        <h2>NFC-String-Beispiel</h2>
+        <h3>
           Ausgabe: {{exampleNFC}}
-        </h4>
+        </h3>
         <pre>exampleNFC: string = "\u0041\u006d\u00e9\u006c\u0069\u0065";</pre>
-        <div>
-          <code>exampleNFC.length: {{exampleNFC.length}}</code>
-        </div>
+        <pre>exampleNFC.length: {{exampleNFC.length}}</pre>
         <p>
           <br>
           Code Points:
         </p>
+        <div>
+          <span class="list"
+            *ngFor="let codePoint of getCodePoints(exampleNFC)">{{codePoint.toString(16).padStart(4,'0')}}</span>
+        </div>
         <pre>for (let i = 0; i &lt; value.length; i++) {{ '{' }}
-      console.log(value.codePointAt(i));
-    {{ '}' }}</pre>
-        <span class="list" *ngFor="let codePoint of getCodePoints(exampleNFC)">{{codePoint.toString(16)}}</span>
+    console.log(value.codePointAt(i).toString(16).padStart(4,'0'));
+{{'}'}}</pre>
       </div>
 
       <div *ngIf="exampleMode=='NFD'">
-        <h3>NFD-String-Beispiel</h3>
-        <h4>
+        <h2>NFD-String-Beispiel</h2>
+        <h3>
           Ausgabe: {{exampleNFD}}
-        </h4>
+        </h3>
         <pre>exampleNFD: string = "\u0041\u006d\u0065\u0301\u006c\u0069\u0065";</pre>
-        <div>
-          <code>exampleNFD.length: {{exampleNFD.length}}</code>
-        </div>
+        <pre>exampleNFD.length: {{exampleNFD.length}}</pre>
         <p>
           <br>
           Code Points:
         </p>
+        <div>
+          <span class="list"
+            *ngFor="let codePoint of getCodePoints(exampleNFD)">{{codePoint.toString(16).padStart(4,'0')}}</span>
+        </div>
         <pre>for (let i = 0; i &lt; value.length; i++) {{ '{' }}
-      console.log(value.codePointAt(i));
-    {{ '}' }}</pre>
-        <span class="list" *ngFor="let codePoint of getCodePoints(exampleNFD)">{{codePoint.toString(16)}}</span>
+    console.log(value.codePointAt(i).toString(16).padStart(4,'0'));
+{{'}'}}</pre>
       </div>
 
       <div *ngIf="exampleMode=='equality'">
-        <h3>Gleichheit prüfen</h3>
-        <h4>
+        <h2>Gleichheit prüfen</h2>
+        <h3>
           Ausgabe NFC: {{exampleNFC}}<br>
           Ausgabe NFD: {{exampleNFD}}
-        </h4>
+        </h3>
         <pre>exampleNFC: string = "\u0041\u006d\u00e9\u006c\u0069\u0065";</pre>
         <pre>exampleNFD: string = "\u0041\u006d\u0065\u0301\u006c\u0069\u0065";</pre>
         <pre>exampleNFC == exampleNFD => {{ exampleNFC == exampleNFD}}</pre>
@@ -122,13 +124,84 @@
       <ng-container *ngIf="inputValue!=''">
         <div>
           Code Points:
-          <span class="list" *ngFor="let codePoint of getCodePoints(inputValue)">{{codePoint.toString(16)}}</span>
+          <span class="list"
+            *ngFor="let codePoint of getCodePoints(inputValue)">{{codePoint.toString(16).padStart(4,'0')}}</span>
         </div>
         <div>
           URL Encoded: {{ encodeURIComponent(inputValue) }}
         </div>
       </ng-container>
     </mat-tab>
-    <mat-tab label="Third">Content 3</mat-tab>
+
+
+    <mat-tab label="Normalisierung">
+      <h1>Unicode Normalisierung</h1>
+      <div class="string-buttons">
+        <mat-form-field>
+          <mat-label>Beispiel-Eingabe</mat-label>
+          <input matInput type="text" [(ngModel)]="inputValue2">
+          <button *ngIf="inputValue2" matSuffix mat-icon-button aria-label="Clear" (click)="inputValue2=''">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+        <button mat-flat-button color="accent" (click)="inputValue2=exampleNFC">Amélie (NFC)</button>
+        <button mat-flat-button color="accent" (click)="inputValue2=exampleNFD">Amélie (NFD)</button>
+        <button mat-flat-button color="accent" (click)="inputValue2='\uFB03'">Ligatur ffi</button>
+        <button mat-flat-button color="accent" (click)="inputValue2='ᴮᴵᴳᴮᴵᴿᴰ'">ᴮᴵᴳᴮᴵᴿᴰ</button>
+        <button mat-flat-button color="accent" (click)="inputValue2='\u2126'">Ohm 'Ω'</button>
+      </div>
+      <ng-container *ngIf="inputValue2!=''">
+        <div>
+          Code Points (Eingabe):
+          <span class="list"
+            *ngFor="let codePoint of getCodePoints(inputValue2)">{{codePoint.toString(16).padStart(4,'0')}}</span>
+        </div>
+
+        <h2 class="section">NFD-Normalisierung</h2>
+        <p><em>kanonische Dekomposition:</em>&#160;&#160;<code>{{inputValue2.normalize('NFD')}}</code></p>
+        <div>
+          Code Points: <span class="list"
+            *ngFor="let codePoint of getCodePoints(inputValue2.normalize('NFD'))">{{codePoint.toString(16).padStart(4,'0')}}</span>
+        </div>
+
+        <h2 class="section">NFC-Normalisierung</h2>
+        <p><em>kanonische Dekomposition, gefolgt von einer kanonischen
+            Komposition:</em>&#160;&#160;<code>{{inputValue2.normalize('NFC')}}</code></p>
+        <div>
+          Code Points: <span class="list"
+            *ngFor="let codePoint of getCodePoints(inputValue2.normalize('NFC'))">{{codePoint.toString(16).padStart(4,'0')}}</span>
+        </div>
+
+        <h2 class="section">NFKC-Normalisierung</h2>
+        <p><em>kompatible Dekomposition:</em>&#160;&#160;<code>{{inputValue2.normalize('NFKC')}}</code></p>
+        <div>
+          Code Points: <span class="list"
+            *ngFor="let codePoint of getCodePoints(inputValue2.normalize('NFKC'))">{{codePoint.toString(16).padStart(4,'0')}}</span>
+        </div>
+
+        <h2 class="section">NFKD-Normalisierung</h2>
+        <p><em>kompatible Dekomposition, gefolgt von einer kanonischen Komposition:</em>&#160;&#160;<code>{{inputValue2.normalize('NFKC')}}</code></p>
+        <div>
+          Code Points: <span class="list"
+            *ngFor="let codePoint of getCodePoints(inputValue2.normalize('NFKD'))">{{codePoint.toString(16).padStart(4,'0')}}</span>
+        </div>
+      </ng-container>
+    </mat-tab>
+
+    <mat-tab label="Infos">
+      <h1>Praxis-Infos</h1>
+      <h2>Am meisten verbreitet: NFC</h2>
+      <p>Die meistverbreitete Normalform in Anwendungen ist NFC. Sie wird unter anderem vom World Wide Web Consortium
+        für XML und HTML empfohlen und auch für JavaScript verwendet, indem der Code vor weiterer Verarbeitung in
+        diese Form überführt wird.</p>
+
+      <h2>Kanonische Normalisierungen für konsistente Datenhaltung (NFD/NFC)</h2>
+      <p>Die kanonischen Normalisierungen stellen sicher, dass äquivalente Daten nicht in unterschiedliche Formen
+        persistiert werden, und gewährleisten damit eine konsistente Datenhaltung.</p>
+
+      <h2>Kompatible Normalisierungen für Suchen (NFKD/NFKC)</h2>
+      <p>Die kompatiblen Normalisierungen können etwa für eine Suche verwendet werden, bei der es auf kleine optische
+        Differenzen nicht ankommen soll.</p>
+    </mat-tab>
   </mat-tab-group>
 </div>

@@ -27,3 +27,12 @@ span.list:last-child::after {
 :host {
     background-color: #303030;
 }
+h2.section {
+    margin: 1.5em 0 1em;
+}
+pre, code {
+    color: #ccc;
+}
+code {
+    font-size: 1.2em;
+}

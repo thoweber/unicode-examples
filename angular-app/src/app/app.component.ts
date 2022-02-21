@@ -10,9 +10,10 @@ export class AppComponent implements OnInit {
 
   exampleNFC: string = "\u0041\u006d\u00e9\u006c\u0069\u0065";
   exampleNFD: string = "\u0041\u006d\u0065\u0301\u006c\u0069\u0065";
-  exampleMode: string = '';
 
+  exampleMode: string = '';
   inputValue: string = '';
+  inputValue2: string = '';
 
   ngOnInit(): void {
     console.log('exampleNFC', this.exampleNFC);
@@ -34,6 +35,12 @@ export class AppComponent implements OnInit {
 
   encodeURIComponent(inputValue: string): string {
     return window.encodeURIComponent(inputValue);
+  }
+
+  clearInputs() {
+    this.inputValue = '';
+    this.inputValue2 = '';
+    this.exampleMode = '';
   }
 
 }
